@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | AI Presentation Analyzer</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-dark: #b38f2d;
+      --black: #0c0c0c;
+      --white: #ffffff;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--black), #1a1a1a);
+      color: var(--white);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: var(--black);
+      border-bottom: 2px solid var(--gold);
+      box-shadow: 0 2px 10px rgba(212,175,55,0.2);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .navbar-brand img {
+      height: 65px;
+      margin-right: 12px;
+    }
+
+    .sidebar {
+      background: #141414;
+      border-right: 1px solid rgba(212,175,55,0.3);
+      min-height: calc(100vh - 76px);
+      padding: 0;
+    }
+
+    .sidebar .nav-link {
+      color: #ccc;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s;
+    }
+
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      color: var(--gold);
+      background: rgba(212,175,55,0.1);
+      border-left: 4px solid var(--gold);
+    }
+
+    .main-content {
+      padding: 30px;
+    }
+
+    .stat-card {
+      background: #141414;
+      border-radius: 12px;
+      padding: 25px;
+      border: 1px solid rgba(212,175,55,0.3);
+      box-shadow: 0 0 12px rgba(212,175,55,0.1);
+      margin-bottom: 25px;
+      transition: transform 0.3s;
+      text-align: center;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    .stat-card span {
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: #141414;
+      border-radius: 12px;
+      padding: 25px;
+      border: 1px solid rgba(212,175,55,0.3);
+      box-shadow: 0 0 12px rgba(212,175,55,0.1);
+      margin-bottom: 25px;
+      transition: transform 0.3s;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card h5 {
+      color: var(--gold);
+      border-bottom: 1px solid rgba(212,175,55,0.3);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .chart-placeholder {
+      height: 200px;
+      border: 2px dashed rgba(212,175,55,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ccc;
+      border-radius: 8px;
+      background: rgba(212,175,55,0.05);
+    }
+
+    .quick-actions .btn {
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.3);
+      padding: 15px;
+      border-radius: 8px;
+      transition: 0.3s;
+      color: #ccc;
+      font-weight: 500;
+    }
+
+    .quick-actions .btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      transform: translateY(-2px);
+    }
+
+    .list-group-item {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #ccc;
+      transition: all 0.3s;
+    }
+
+    .list-group-item:hover {
+      background: rgba(212,175,55,0.1);
+      color: var(--white);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      font-weight: 600;
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-dark);
+      color: var(--white);
+    }
+
+    .admin-welcome {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(26, 37, 48, 0.1) 100%);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(212,175,55,0.3);
+      margin-bottom: 25px;
+    }
+
+    .live-indicator {
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 1.5s infinite;
+      display: inline-block;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      background: rgba(212,175,55,0.1);
+      border-radius: 20px;
+      padding: 8px 15px;
+      border: 1px solid rgba(212,175,55,0.3);
+      margin-bottom: 15px;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="logo.png" alt="Logo"> AI Presentation Analyzer - Admin
+      </a>
+      <div class="d-flex align-items-center">
+        <span class="text-light me-3" id="adminName">Welcome, Admin</span>
+        <button class="btn btn-outline-warning btn-sm" onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-2 sidebar">
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="#">
+            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+          </a>
+          <a class="nav-link" href="#">
+            <i class="bi bi-graph-up me-2"></i> Analytics
+          </a>
+          <a class="nav-link" href="UserManagement.html">
+            <i class="bi bi-people me-2"></i> Users
+          </a>
+          <a class="nav-link" href="#">
+            <i class="bi bi-camera-video me-2"></i> Presentations
+          </a>
+          <a class="nav-link" href="#">
+            <i class="bi bi-database me-2"></i> Database
+          </a>
+          <a class="nav-link" href="#">
+            <i class="bi bi-shield-check me-2"></i> Security
+          </a>
+          <a class="nav-link" href="#">
+            <i class="bi bi-gear me-2"></i> Settings
+          </a>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-10 main-content">
+        <!-- Welcome Section -->
+        <div class="admin-welcome">
+          <div class="system-status">
+            <span class="live-indicator"></span>
+            System Status: Operational
+          </div>
+          <h3>System Overview</h3>
+          <p class="text-muted" id="dashboardWelcome">Monitor and manage your AI Presentation Analyzer platform</p>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <h2 id="totalUsers">1,247</h2>
+              <span>Total Users</span>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <h2 id="totalPresentations">8,429</h2>
+              <span>Presentations</span>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <h2 id="capacity">78.4%</h2>
+              <span>Capacity</span>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <h2 id="uptime">99.9%</h2>
+              <span>System Uptime</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Row -->
+        <div class="row g-3 mb-4">
+          <!-- Recent Activities -->
+          <div class="col-lg-6">
+            <div class="card">
+              <h5><i class="bi bi-clock-history me-2"></i> Recent Activities</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><i class="bi bi-person-plus me-2 text-success"></i> New user registered</span>
+                  <small class="text-muted">2m ago</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><i class="bi bi-camera-video me-2 text-primary"></i> Presentation completed</span>
+                  <small class="text-muted">10m ago</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><i class="bi bi-hdd me-2 text-warning"></i> Database backup</span>
+                  <small class="text-muted">20m ago</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><i class="bi bi-arrow-up-circle me-2 text-info"></i> System update installed</span>
+                  <small class="text-muted">30m ago</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span><i class="bi bi-cloud-upload me-2 text-secondary"></i> Recording uploaded</span>
+                  <small class="text-muted">1h ago</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Weekly Performance -->
+          <div class="col-lg-6">
+            <div class="card">
+              <h5><i class="bi bi-graph-up me-2"></i> Weekly Performance</h5>
+              <div class="chart-placeholder">
+                <div class="text-center">
+                  <i class="bi bi-bar-chart" style="font-size: 3rem; color: var(--gold);"></i>
+                  <p class="mt-2">Performance Analytics Chart</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <h5><i class="bi bi-lightning me-2"></i> Quick Actions</h5>
+          <div class="row g-3 quick-actions mt-2">
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-people me-1"></i> Manage Users
+              </button>
+            </div>
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-gear me-1"></i> System Settings
+              </button>
+            </div>
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-database me-1"></i> Database
+              </button>
+            </div>
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-download me-1"></i> Export Data
+              </button>
+            </div>
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-shield-check me-1"></i> Security
+              </button>
+            </div>
+            <div class="col-md-2 col-6">
+              <button class="btn w-100">
+                <i class="bi bi-graph-up me-1"></i> Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Stats Row -->
+        <div class="row g-3 mt-4">
+          <div class="col-md-4">
+            <div class="card">
+              <h5><i class="bi bi-cpu me-2"></i> System Health</h5>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>CPU Usage</span>
+                  <span>42%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: #333;">
+                  <div class="progress-bar" role="progressbar" style="width: 42%; background-color: var(--gold);"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Memory Usage</span>
+                  <span>68%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: #333;">
+                  <div class="progress-bar" role="progressbar" style="width: 68%; background-color: var(--gold);"></div>
+                </div>
+              </div>
+              <div>
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Storage</span>
+                  <span>35%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: #333;">
+                  <div class="progress-bar" role="progressbar" style="width: 35%; background-color: var(--gold);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <h5><i class="bi bi-clock me-2"></i> Recent Sessions</h5>
+              <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <div>John Doe</div>
+                    <small class="text-muted">Presentation Analysis</small>
+                  </div>
+                  <span class="badge bg-gold rounded-pill">Active</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <div>Sarah Smith</div>
+                    <small class="text-muted">Voice Recording</small>
+                  </div>
+                  <span class="badge bg-secondary rounded-pill">Completed</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <div>Mike Johnson</div>
+                    <small class="text-muted">Facial Analysis</small>
+                  </div>
+                  <span class="badge bg-secondary rounded-pill">Completed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <h5><i class="bi bi-info-circle me-2"></i> System Information</h5>
+              <div class="mb-2">
+                <small class="text-muted">Version</small>
+                <div>v2.1.4</div>
+              </div>
+              <div class="mb-2">
+                <small class="text-muted">Last Update</small>
+                <div>2024-01-15</div>
+              </div>
+              <div class="mb-2">
+                <small class="text-muted">Server Status</small>
+                <div><span class="text-success">●</span> All Systems Operational</div>
+              </div>
+              <div>
+                <small class="text-muted">Security Level</small>
+                <div><span class="text-gold">High</span> - TLS 1.3 Enabled</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Load admin data from sessionStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const adminData = sessionStorage.getItem('adminUser');
+      
+      if (!adminData) {
+        // Check authentication via API
+        checkAuthentication();
+        return;
+      }
+      
+      const admin = JSON.parse(adminData);
+      document.getElementById('adminName').textContent = `Welcome, ${admin.firstName} ${admin.lastName}`;
+      document.getElementById('dashboardWelcome').textContent = `Welcome ${admin.firstName} to your admin dashboard for ${admin.organization}`;
+      
+      // Load dashboard stats
+      loadDashboardStats();
+    });
+
+    // Check if user is authenticated
+    async function checkAuthentication() {
+      try {
+        const response = await fetch('api/check-auth.php');
+        const data = await response.json();
+        
+        if (data.success) {
+          // User is authenticated, update UI
+          document.getElementById('adminName').textContent = `Welcome, ${data.data.name}`;
+          document.getElementById('dashboardWelcome').textContent = `Welcome to your admin dashboard for ${data.data.organization}`;
+          loadDashboardStats();
+        } else {
+          // Redirect to login
+          window.location.href = 'AdminLogin.html';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = 'AdminLogin.html';
+      }
+    }
+
+    function loadDashboardStats() {
+      // Simulate loading stats with a slight delay
+      setTimeout(() => {
+        // In a real app, you would fetch these from an API
+        document.getElementById('totalUsers').textContent = '1,247';
+        document.getElementById('totalPresentations').textContent = '8,429';
+        document.getElementById('capacity').textContent = '78.4%';
+        document.getElementById('uptime').textContent = '99.9%';
+      }, 500);
+    }
+
+    function logout() {
+      // Call logout API
+      fetch('api/logout.php')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Clear session storage and redirect
+            sessionStorage.removeItem('adminUser');
+            window.location.href = 'AdminLogin.html';
+          }
+        })
+        .catch(error => {
+          console.error('Logout error:', error);
+          // Still redirect even if API call fails
+          sessionStorage.removeItem('adminUser');
+          window.location.href = 'AdminLogin.html';
+        });
+    }
+
+    // Add badge color styling
+    const style = document.createElement('style');
+    style.textContent = `
+      .bg-gold {
+        background-color: var(--gold) !important;
+        color: var(--black) !important;
+      }
+      .text-gold {
+        color: var(--gold) !important;
+      }
+      .progress-bar {
+        background-color: var(--gold) !important;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

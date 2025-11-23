@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Sign Up | AI Presentation Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-dark: #b38f2d;
+            --black: #0c0c0c;
+            --white: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--black), #1a1a1a);
+            color: var(--white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--black);
+            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 10px rgba(212,175,55,0.2);
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .signup-container {
+            max-width: 1000px;
+            margin: 80px auto 20px;
+            box-shadow: 0 0 20px rgba(212,175,55,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #141414;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, var(--black) 0%, #1a2530 100%);
+            color: white;
+            padding: 40px 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .info-panel h2 {
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: var(--gold);
+        }
+
+        .benefits-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .benefits-list i {
+            color: var(--gold);
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .status-badge {
+            background-color: rgba(212,175,55,0.2);
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--gold);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .signup-panel {
+            padding: 40px 30px;
+            background-color: #141414;
+        }
+
+        .signup-panel h3 {
+            color: var(--gold);
+            margin-bottom: 25px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(212,175,55,0.3);
+            padding-bottom: 10px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(212,175,55,0.3);
+            margin-bottom: 20px;
+            font-size: 1rem;
+            background: #1c1c1c;
+            color: var(--white);
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 0.2rem rgba(212,175,55,0.25);
+            background: #1c1c1c;
+            color: var(--white);
+        }
+
+        .btn-signup {
+            background-color: var(--gold);
+            color: var(--black);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-signup:hover {
+            background-color: var(--gold-dark);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+
+        .terms-agree {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+
+        .terms-agree label {
+            color: #ccc;
+        }
+
+        .terms-agree a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background-color: rgba(212,175,55,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .security-notice {
+            background-color: rgba(212,175,55,0.1);
+            border-left: 4px solid var(--gold);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .password-strength {
+            height: 5px;
+            background-color: #333;
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 5px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+        }
+
+        .login-link a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .info-panel, .signup-panel {
+                padding: 30px 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="logo.png" alt="Logo" height="40"> AI Presentation Analyzer
+        </a>
+        <div class="d-flex align-items-center">
+            <a href="LivePresentationPage.html" class="btn btn-outline-warning">
+                <i class="bi bi-arrow-left"></i> Back to Analyzer
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container signup-container">
+    <div class="row g-0">
+        <!-- Left Panel with Info -->
+        <div class="col-lg-6">
+            <div class="info-panel">
+                <div>
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        System Status: Operational
+                    </div>
+                    <h2>Create Admin Account</h2>
+                    <p>Join our secure platform with enterprise-grade security and advanced admin features for presentation analytics.</p>
+                    
+                    <ul class="benefits-list">
+                        <li><i class="bi bi-shield-check"></i> Enterprise-grade security</li>
+                        <li><i class="bi bi-graph-up"></i> Advanced analytics and reporting</li>
+                        <li><i class="bi bi-people"></i> User management and access control</li>
+                        <li><i class="bi bi-database"></i> Data export and backup features</li>
+                        <li><i class="bi bi-headset"></i> 24/7 dedicated admin support</li>
+                    </ul>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">02/05</div>
+                        <div class="stat-label">Security Level</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">256-bit</div>
+                        <div class="stat-label">Encryption</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">TLS 1.3</div>
+                        <div class="stat-label">Protocol</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel with Sign-up Form -->
+        <div class="col-lg-6">
+            <div class="signup-panel">
+                <h3>Create Admin Account</h3>
+                
+                <form id="signupForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter your first name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter your last name" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Create a strong password" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="form-text" id="passwordHelp">Use 8+ characters with a mix of letters, numbers & symbols</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter your password" required>
+                        <div class="form-text" id="confirmPasswordHelp"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="organization" class="form-label">Organization</label>
+                        <input type="text" class="form-control" id="organization" placeholder="Enter your organization name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="adminCode" class="form-label">Admin Access Code</label>
+                        <input type="text" class="form-control" id="adminCode" placeholder="Enter admin access code" required>
+                        <div class="form-text">Provided by system administrator</div>
+                    </div>
+                    
+                    <div class="terms-agree">
+                        <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+                        <label for="agreeTerms" class="form-check-label">
+                            I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-signup">Create Admin Account</button>
+                    
+                    <div class="login-link">
+                        <p>Already have an account? <a href="AdminLogin.html">Sign in here</a></p>
+                    </div>
+                </form>
+                
+                <div class="security-notice">
+                    <i class="bi bi-shield-check me-2"></i>
+                    Your information is protected with enterprise-grade encryption. All data transmission is secured with TLS 1.3 protocols.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const organization = document.getElementById('organization').value;
+        const adminCode = document.getElementById('adminCode').value;
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        
+        // Validation
+        if (!firstName || !lastName) {
+            alert('Please enter your first and last name');
+            return;
+        }
+        
+        if (!email) {
+            alert('Please enter your email address');
+            return;
+        }
+        
+        if (!password) {
+            alert('Please create a password');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+        
+        if (!organization) {
+            alert('Please enter your organization name');
+            return;
+        }
+        
+        if (!adminCode) {
+            alert('Please enter the admin access code');
+            return;
+        }
+        
+        if (!agreeTerms) {
+            alert('Please agree to the Terms of Service and Privacy Policy');
+            return;
+        }
+        
+        // Show loading state
+        const signupBtn = document.querySelector('.btn-signup');
+        const originalText = signupBtn.innerHTML;
+        signupBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Creating Account...';
+        signupBtn.disabled = true;
+        
+        try {
+            // Send data to PHP backend
+            const response = await fetch('api/admin-signup.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    organization,
+                    adminCode
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                alert('Admin account created successfully! Redirecting to dashboard...');
+                window.location.href = 'AdminDashboardHome.html';
+            } else {
+                alert('Error: ' + data.message);
+                signupBtn.innerHTML = originalText;
+                signupBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+            signupBtn.innerHTML = originalText;
+            signupBtn.disabled = false;
+        }
+    });
+    
+    // Password strength indicator
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const passwordHelp = document.getElementById('passwordHelp');
+        
+        let strength = 0;
+        let feedback = '';
+        
+        if (password.length >= 8) strength += 25;
+        if (/[A-Z]/.test(password)) strength += 25;
+        if (/[0-9]/.test(password)) strength += 25;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+        
+        strengthBar.style.width = strength + '%';
+        
+        if (strength < 25) {
+            strengthBar.style.backgroundColor = '#e74c3c';
+            feedback = 'Weak password';
+        } else if (strength < 50) {
+            strengthBar.style.backgroundColor = '#f39c12';
+            feedback = 'Fair password';
+        } else if (strength < 75) {
+            strengthBar.style.backgroundColor = '#3498db';
+            feedback = 'Good password';
+        } else {
+            strengthBar.style.backgroundColor = '#2ecc71';
+            feedback = 'Strong password';
+        }
+        
+        passwordHelp.textContent = feedback;
+    });
+    
+    // Confirm password validation
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+        const confirmPasswordHelp = document.getElementById('confirmPasswordHelp');
+        
+        if (confirmPassword === '') {
+            confirmPasswordHelp.textContent = '';
+            confirmPasswordHelp.style.color = '';
+        } else if (password === confirmPassword) {
+            confirmPasswordHelp.textContent = 'Passwords match';
+            confirmPasswordHelp.style.color = '#2ecc71';
+        } else {
+            confirmPasswordHelp.textContent = 'Passwords do not match';
+            confirmPasswordHelp.style.color = '#e74c3c';
+        }
+    });
+</script>
+</body>
+</html>
